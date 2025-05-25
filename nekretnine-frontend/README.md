@@ -1,5 +1,7 @@
-Pokretanje frontenda:
+FRONTEND
+pokretanje:
+- npm install
+- npm start
 
-npm install
-
-ng serve
+pokretanje testova:
+- npm test

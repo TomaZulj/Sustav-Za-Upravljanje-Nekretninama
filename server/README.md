@@ -9,5 +9,6 @@ DB_PASSWORD=
 DB_NAME=
 ```
 - npm run start:dev
+
 pokretanje testova:
 - npm run test

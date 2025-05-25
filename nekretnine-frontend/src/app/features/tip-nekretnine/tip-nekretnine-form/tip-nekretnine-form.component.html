@@ -1,0 +1,28 @@
+<div class="card">
+  <form [formGroup]="tipForm" (ngSubmit)="onSubmit()">
+    <div class="grid">
+      <div class="col-12 md:col-12">
+        <div class="field">
+          <label for="naziv">Naziv *</label>
+          <input id="naziv" type="text" pInputText formControlName="naziv" class="w-full">
+          <small *ngIf="tipForm.get('naziv')?.invalid && tipForm.get('naziv')?.touched" class="p-error">
+            Naziv je obavezan.
+          </small>
+        </div>
+      </div>
+
+      <div class="col-12 md:col-12">
+        <div class="field">
+          <label for="opis">Opis *</label>
+          <textarea id="opis" rows="3" pInputTextarea formControlName="opis" class="w-full"></textarea>
+        </div>
+      </div>
+    </div>
+
+    <div class="flex justify-content-center mt-4">
+      <button pButton type="button" label="Odustani" icon="pi pi-times" class="p-button-text mr-2"
+        (click)="onCancel()"></button>
+      <button pButton type="submit" label="Spremi" icon="pi pi-check" [disabled]="tipForm.invalid"></button>
+    </div>
+  </form>
+</div>

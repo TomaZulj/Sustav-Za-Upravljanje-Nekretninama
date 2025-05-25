@@ -1,0 +1,34 @@
+<p-dialog [(visible)]="display" [style]="{width: '450px'}" header="Podaci o lokaciji" [modal]="true"
+  (onHide)="closeDialog()">
+  <form [formGroup]="lokacijaForm" (ngSubmit)="saveLokacija()">
+    <div class="field">
+      <label for="adresa">Adresa *</label>
+      <input id="adresa" type="text" pInputText formControlName="adresa" class="w-full">
+      <small *ngIf="lokacijaForm.get('adresa')?.invalid && lokacijaForm.get('adresa')?.touched" class="p-error">
+        {{ getAdresaErrorMessage() }}
+      </small>
+    </div>
+
+    <div class="field">
+      <label for="grad">Grad *</label>
+      <input id="grad" type="text" pInputText formControlName="grad" class="w-full">
+      <small *ngIf="lokacijaForm.get('grad')?.invalid && lokacijaForm.get('grad')?.touched" class="p-error">
+        {{ getGradErrorMessage() }}
+      </small>
+    </div>
+
+    <div class="field">
+      <label for="drzava">Država *</label>
+      <input id="drzava" type="text" pInputText formControlName="drzava" class="w-full">
+      <small *ngIf="lokacijaForm.get('drzava')?.invalid && lokacijaForm.get('drzava')?.touched" class="p-error">
+        {{ getDrzavaErrorMessage() }}
+      </small>
+    </div>
+
+    <div class="flex justify-content-end mt-4">
+      <button pButton type="button" label="Odustani" icon="pi pi-times" class="p-button-text mr-2"
+        (click)="closeDialog()"></button>
+      <button pButton type="submit" label="Spremi" icon="pi pi-check" [disabled]="lokacijaForm.invalid"></button>
+    </div>
+  </form>
+</p-dialog>

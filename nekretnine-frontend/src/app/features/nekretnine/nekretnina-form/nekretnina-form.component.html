@@ -1,0 +1,146 @@
+<div class="card">
+
+  <form [formGroup]="nekretninaForm" (ngSubmit)="onSubmit()">
+    <p-panel header="Podaci o nekretnini">
+      <div class="grid">
+        <div class="col-12 md:col-3">
+          <div class="field">
+            <label for="naslov">Naslov *</label>
+            <input id="naslov" type="text" pInputText formControlName="naslov" class="w-full">
+            <small *ngIf="nekretninaForm.get('naslov')?.invalid && nekretninaForm.get('naslov')?.touched"
+              class="p-error">
+              {{ getNaslovErrorMessage() }}
+            </small>
+          </div>
+
+          <div class="field">
+            <label for="cijena">Cijena (€) *</label>
+            <p-inputNumber id="cijena" formControlName="cijena" mode="currency" currency="EUR" locale="hr-HR"
+              class="w-full"></p-inputNumber>
+            <small *ngIf="nekretninaForm.get('cijena')?.invalid && nekretninaForm.get('cijena')?.touched"
+              class="p-error">
+              {{ getCijenaErrorMessage() }}
+            </small>
+          </div>
+
+          <div class="field">
+            <label for="tip_nekretnine_id">Tip nekretnine *</label>
+            <p-dropdown id="tip_nekretnine_id" [options]="tipoviNekretnine" formControlName="tip_nekretnine_id"
+              optionLabel="naziv" optionValue="tip_nekretnine_id" placeholder="Odaberi tip" class="w-full"></p-dropdown>
+            <small
+              *ngIf="nekretninaForm.get('tip_nekretnine_id')?.invalid && nekretninaForm.get('tip_nekretnine_id')?.touched"
+              class="p-error">
+              Tip nekretnine je obavezan.
+            </small>
+          </div>
+        </div>
+
+        <div class="col-12 md:col-3">
+          <div class="field">
+            <label for="status">Status *</label>
+            <p-dropdown id="status" [options]="statusOptions" formControlName="status" optionLabel="label"
+              optionValue="value" placeholder="Odaberi status" class="w-full"></p-dropdown>
+            <small *ngIf="nekretninaForm.get('status')?.invalid && nekretninaForm.get('status')?.touched"
+              class="p-error">
+              Status je obavezan.
+            </small>
+          </div>
+
+          <div class="field">
+            <label for="povrsina">Površina (m²) *</label>
+            <p-inputNumber id="povrsina" formControlName="povrsina" suffix=" m²" class="w-full"></p-inputNumber>
+            <small *ngIf="nekretninaForm.get('povrsina')?.invalid && nekretninaForm.get('povrsina')?.touched"
+              class="p-error">
+              {{ getPovrsinaErrorMessage() }}
+            </small>
+          </div>
+
+          <div class="field">
+            <label for="agent_id">Agent *</label>
+            <p-dropdown id="agent_id" [options]="agenti" formControlName="agent_id" optionLabel="imePrezime"
+              optionValue="agent_id" placeholder="Odaberi agenta" class="w-full"></p-dropdown>
+            <small *ngIf="nekretninaForm.get('agent_id')?.invalid && nekretninaForm.get('agent_id')?.touched"
+              class="p-error">
+              Agent je obavezan.
+            </small>
+          </div>
+        </div>
+
+        <div class="col-12 md:col-3">
+          <div class="field">
+            <label for="opis">Opis</label>
+            <textarea id="opis" rows="3" pInputTextarea formControlName="opis" class="w-full"></textarea>
+          </div>
+
+          <div class="field">
+            <label>Lokacija *</label>
+            <div class="p-inputgroup" style="max-width: 500px;">
+              <input type="text" pInputText [value]="trenutnaLokacijaPrikaz" readonly class="w-10">
+              <button pButton type="button" icon="pi pi-pencil" (click)="openLokacijaDialog()"
+                pTooltip="Uredi/Dodaj lokaciju" tooltipPosition="top"></button>
+            </div>
+            <small *ngIf="nekretninaForm.get('lokacija_id')?.invalid && nekretninaForm.get('lokacija_id')?.touched"
+              class="p-error">
+              Lokacija je obavezna.
+            </small>
+          </div>
+        </div>
+      </div>
+    </p-panel>
+
+    <p-divider></p-divider>
+
+    <p-panel header="Kontakt zahtjevi" *ngIf="isEditMode">
+      <p-toolbar>
+        <div class="p-toolbar-group-start">
+          <button pButton label="Novi kontakt zahtjev" icon="pi pi-plus" type="button"
+            (click)="openNewKontaktZahtjevDialog()"></button>
+        </div>
+      </p-toolbar>
+      <p-table [value]="kontaktZahtjevi" responsiveLayout="scroll">
+        <ng-template pTemplate="header">
+          <tr>
+            <th>Poruka</th>
+            <th>Korisnik</th>
+            <th>Agent (zahtjeva)</th>
+            <th>Akcije</th>
+          </tr>
+        </ng-template>
+        <ng-template pTemplate="body" let-kz>
+          <tr>
+            <td>{{kz.poruka}}</td>
+            <td>{{kz.korisnik?.ime}} {{kz.korisnik?.prezime}}</td>
+            <td>{{kz.agent?.korisnik?.ime}} {{kz.agent?.korisnik?.prezime}}</td>
+            <td>
+              <button pButton pRipple icon="pi pi-pencil" class="p-button-rounded p-button-success mr-2" type="button"
+                (click)="openEditKontaktZahtjevDialog(kz)"></button>
+              <button pButton pRipple icon="pi pi-trash" class="p-button-rounded p-button-danger" type="button"
+                (click)="deleteKontaktZahtjev(kz)"></button>
+            </td>
+          </tr>
+        </ng-template>
+        <ng-template pTemplate="emptymessage">
+          <tr>
+            <td colspan="4">Nema kontakt zahtjeva za ovu nekretninu.</td>
+          </tr>
+        </ng-template>
+      </p-table>
+    </p-panel>
+
+    <div class="flex mt-4">
+      <button pButton type="button" label="Odustani" icon="pi pi-times" class="p-button-text mr-2"
+        (click)="goBack()"></button>
+      <button pButton type="submit" [label]="isEditMode ? 'Spremi promjene' : 'Stvori nekretninu'"
+        icon="pi pi-check"></button>
+    </div>
+  </form>
+</div>
+
+<app-lokacija-dialog [(display)]="displayLokacijaDialog" [lokacija]="selectedLokacijaForDialog"
+  (lokacijaSaved)="handleLokacijaSaved($event)">
+</app-lokacija-dialog>
+
+<app-kontakt-zahtjev-dialog [(display)]="displayKontaktZahtjevDialog" [kontaktZahtjev]="selectedKontaktZahtjev"
+  [nekretninaId]="nekretninaId ?? undefined" (kontaktZahtjevSaved)="handleKontaktZahtjevSaved($event)"
+  (kontaktZahtjevDeleted)="handleKontaktZahtjevDeleted($event)">
+</app-kontakt-zahtjev-dialog>

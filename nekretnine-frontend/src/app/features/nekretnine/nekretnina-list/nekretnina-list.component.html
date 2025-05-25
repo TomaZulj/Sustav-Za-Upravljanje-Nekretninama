@@ -1,0 +1,64 @@
+<div class="card">
+  <div class="card-header">
+    <h2>Nekretnine</h2>
+  </div>
+
+  <p-toolbar styleClass="mb-4">
+    <ng-template pTemplate="left">
+      <button pButton pRipple label="Nova nekretnina" icon="pi pi-plus" class="p-button-success mr-2" 
+        routerLink="/nekretnine/nova"></button>
+    </ng-template>
+
+    <ng-template pTemplate="right">
+      <div class="p-input-icon-left">
+        <i class="pi pi-search"></i>
+        <input pInputText type="text" placeholder="Pretraži" (input)="applyGlobalFilter($event)"/>
+      </div>
+    </ng-template>
+  </p-toolbar>
+
+  <p-table #dt [value]="nekretnine" [rows]="10" [paginator]="true" 
+    [globalFilterFields]="['naslov', 'opis', 'tipNekretnine.naziv', 'lokacija.grad', 'agent.korisnik.ime', 'agent.korisnik.prezime']"
+    responsiveLayout="scroll" [rowHover]="true" dataKey="nekretnina_id" styleClass="p-datatable-sm">
+    <ng-template pTemplate="header">
+      <tr>
+        <th pSortableColumn="naslov">Naslov <p-sortIcon field="naslov"></p-sortIcon></th>
+        <th pSortableColumn="cijena" style="width: 15%">Cijena <p-sortIcon field="cijena"></p-sortIcon></th>
+        <th pSortableColumn="povrsina" style="width: 10%">Površina <p-sortIcon field="povrsina"></p-sortIcon></th>
+        <th pSortableColumn="status" style="width: 15%">Status <p-sortIcon field="status"></p-sortIcon></th>
+        <th pSortableColumn="tipNekretnine.naziv" style="width: 15%">Tip <p-sortIcon field="tipNekretnine.naziv"></p-sortIcon></th>
+        <th style="width: 15%">Akcije</th>
+      </tr>
+    </ng-template>
+    <ng-template pTemplate="body" let-nekretnina>
+      <tr>
+        <td>
+          {{nekretnina.naslov}}
+        </td>
+        <td>
+          {{formatCijena(nekretnina.cijena)}}
+        </td>
+        <td>
+          {{nekretnina.povrsina}} m²
+        </td>
+        <td>
+          <p-tag [value]="nekretnina.status" [severity]="getStatusSeverity(nekretnina.status)"></p-tag>
+        </td>
+        <td>
+          {{nekretnina.tipNekretnine?.naziv}}
+        </td>
+        <td>
+          <button pButton pRipple icon="pi pi-pencil" class="p-button-rounded p-button-success mr-2"
+            [routerLink]="['/nekretnine/uredi', nekretnina.nekretnina_id]"></button>
+          <button pButton pRipple icon="pi pi-trash" class="p-button-rounded p-button-danger"
+            (click)="deleteNekretnina(nekretnina)"></button>
+        </td>
+      </tr>
+    </ng-template>
+    <ng-template pTemplate="emptymessage">
+      <tr>
+        <td colspan="6">Nema pronađenih nekretnina.</td>
+      </tr>
+    </ng-template>
+  </p-table>
+</div>

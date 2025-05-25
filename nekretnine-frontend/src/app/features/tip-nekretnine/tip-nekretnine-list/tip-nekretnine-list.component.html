@@ -1,0 +1,55 @@
+<div class="card">
+  <div class="card-header">
+    <h2>Tipovi nekretnina</h2>
+  </div>
+
+  <p-toolbar styleClass="mb-4">
+    <ng-template pTemplate="left">
+      <button pButton pRipple label="Novi tip" icon="pi pi-plus" class="p-button-success mr-2" (click)="openNewDialog()"></button>
+    </ng-template>
+
+    <ng-template pTemplate="right">
+      <div class="p-input-icon-left">
+        <i class="pi pi-search"></i>
+        <input pInputText type="text" placeholder="Pretraži" (input)="applyGlobalFilter($event)"/>
+      </div>
+    </ng-template>
+  </p-toolbar>
+
+  <p-table #dt [value]="tipoviNekretnine" [rows]="10" [paginator]="true" [globalFilterFields]="['naziv', 'opis']"
+    responsiveLayout="scroll" [rowHover]="true" dataKey="tip_nekretnine_id" styleClass="p-datatable-sm">
+    <ng-template pTemplate="header">
+      <tr>
+        <th pSortableColumn="tip_nekretnine_id" style="width: 10%">ID <p-sortIcon field="tip_nekretnine_id"></p-sortIcon></th>
+        <th pSortableColumn="naziv" style="width: 25%">Naziv <p-sortIcon field="naziv"></p-sortIcon></th>
+        <th pSortableColumn="opis">Opis <p-sortIcon field="opis"></p-sortIcon></th>
+        <th style="width: 15%">Akcije</th>
+      </tr>
+    </ng-template>
+    <ng-template pTemplate="body" let-tip>
+      <tr>
+        <td>{{tip.tip_nekretnine_id}}</td>
+        <td>{{tip.naziv}}</td>
+        <td>{{tip.opis}}</td>
+        <td>
+          <button pButton pRipple icon="pi pi-pencil" class="p-button-rounded p-button-success mr-2"
+            (click)="editTip(tip)"></button>
+          <button pButton pRipple icon="pi pi-trash" class="p-button-rounded p-button-danger"
+            (click)="deleteTip(tip)"></button>
+        </td>
+      </tr>
+    </ng-template>
+    <ng-template pTemplate="emptymessage">
+      <tr>
+        <td colspan="4">Nema pronađenih tipova nekretnina.</td>
+      </tr>
+    </ng-template>
+  </p-table>
+
+  <p-dialog [(visible)]="displayDialog" [style]="{width: '450px'}" header="Tip nekretnine" [modal]="true" 
+    (onHide)="onDialogHide()">
+    <ng-container *ngIf="selectedTip">
+      <app-tip-nekretnine-form [tip]="selectedTip" [isEditMode]="isEditMode" (formSubmitted)="onFormSubmit($event)" (formCancelled)="closeDialog()"></app-tip-nekretnine-form>
+    </ng-container>
+  </p-dialog>
+</div>

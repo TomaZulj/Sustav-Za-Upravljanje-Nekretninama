@@ -1,0 +1,42 @@
+<p-dialog [(visible)]="display" [style]="{width: '500px'}" 
+  [header]="kontaktZahtjev?.zahtjev_id ? 'Uredi kontakt zahtjev' : 'Novi kontakt zahtjev'" 
+  [modal]="true" (onHide)="closeDialog()">
+  
+  <form [formGroup]="kontaktZahtjevForm" (ngSubmit)="saveKontaktZahtjev()">
+    <div class="field">
+      <label for="korisnik_id">Korisnik *</label>
+      <p-dropdown id="korisnik_id" [options]="korisnici" formControlName="korisnik_id" 
+        optionLabel="imePrezime" optionValue="korisnik_id" placeholder="Odaberi korisnika" 
+        [style]="{'width':'100%'}">
+      </p-dropdown>
+      <small *ngIf="kontaktZahtjevForm.get('korisnik_id')?.invalid && kontaktZahtjevForm.get('korisnik_id')?.touched" 
+        class="p-error">
+        Korisnik je obavezan.
+      </small>
+    </div>
+    
+    <div class="field">
+      <label for="poruka">Poruka *</label>
+      <textarea id="poruka" rows="5" pInputTextarea formControlName="poruka" class="w-full" 
+        placeholder="Unesite poruku kontakt zahtjeva..."></textarea>
+      <small *ngIf="kontaktZahtjevForm.get('poruka')?.invalid && kontaktZahtjevForm.get('poruka')?.touched" 
+        class="p-error">
+        {{ getPorukaErrorMessage() }}
+      </small>
+    </div>
+    
+    <div class="flex justify-content-between mt-4">
+      <div>
+        <button *ngIf="kontaktZahtjev?.zahtjev_id" pButton type="button" 
+          label="Obriši" icon="pi pi-trash" class="p-button-danger" 
+          (click)="deleteKontaktZahtjev()"></button>
+      </div>
+      <div class="flex">
+        <button pButton type="button" label="Odustani" icon="pi pi-times" 
+          class="p-button-text mr-2" (click)="closeDialog()"></button>
+        <button pButton type="submit" label="Spremi" icon="pi pi-check" 
+          [disabled]="kontaktZahtjevForm.invalid"></button>
+      </div>
+    </div>
+  </form>
+</p-dialog>

@@ -1,0 +1,13 @@
+<div class="app-container">
+  <header>
+    <div class="header-content">
+      <p-tabMenu [model]="items" [activeItem]="activeItem" styleClass="custom-tabmenu"></p-tabMenu>
+      <p class="app-title">Agencija za nekretnine</p>
+    </div>
+  </header>
+  <main class="p-4">
+    <router-outlet></router-outlet>
+  </main>
+</div>
+<p-toast></p-toast>
+<p-confirmDialog header="Potvrda" icon="pi pi-exclamation-triangle"></p-confirmDialog>
